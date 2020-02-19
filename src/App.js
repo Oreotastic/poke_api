@@ -14,17 +14,32 @@ function App() {
     id: 0,
     name: '',
     sprite: '',
-    games: []
+    games: [],
+    desc: ''
   })
+  const [desc, setDesc] = useState('')
 
   const iChooseYou = (el) => {
-    console.dir(el.target.dataset.url)
     const url = el.target.dataset.url
     axios.get(url)
     .then(response => {
-      console.log(response.data)
-      setCurrentPokemon({id: response.data.id, name: response.data.name, sprite: response.data.sprites.front_default, games: response.data.game_indices})
-      return currentPokemon
+      setCurrentPokemon({id: response.data.id, name: response.data.name, sprite: response.data.sprites.front_default, games: response.data.game_indices
+        })
+      return response
+    }).then(response => response.data)
+    .then(data => {
+      return axios.get(data.species.url)
+      .then(response => response.data)
+      .then(data => {
+        let text 
+        for(let entry of data.flavor_text_entries) {
+          if(entry.language.name === 'en') {
+            text = entry.flavor_text
+            break;
+          }
+        }
+        setDesc(text)
+      })
     })
   }
 
@@ -52,17 +67,35 @@ function App() {
   useEffect(() => {
     axios.get(`${api}/pokemon/ditto`)
       .then(response => {
-        console.log(response.data)
-        setCurrentPokemon({id: response.data.id, name: response.data.name, sprite: response.data.sprites.front_default, games: response.data.game_indices})
-        return currentPokemon
+        setCurrentPokemon({id: response.data.id, name: response.data.name, sprite: response.data.sprites.front_default, games: response.data.game_indices
+        })
+        return response
+    }).then(response => response.data)
+    .then(data => {
+      return axios.get(data.species.url)
+      .then(response => response.data)
+      .then(data => {
+        let text 
+        for(let entry of data.flavor_text_entries) {
+          if(entry.language.name === 'en') {
+            text = entry.flavor_text
+            break;
+          }
+        }
+        setDesc(text)
+      })
     })
+      
+    
   }, [])
 
   return (
-    <div className="container">
+    <div className="container app">
       <h1>Poke App</h1>
-      <Sidebar pokemon={pokemon} iChooseYou={iChooseYou}/>
-      <Infobox currentPokemon={currentPokemon} />
+      <div className="main">
+        <Sidebar pokemon={pokemon} iChooseYou={iChooseYou}/>
+        <Infobox currentPokemon={currentPokemon} desc={desc}/>
+      </div>
     </div>
   );
 }

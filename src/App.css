@@ -1,3 +1,42 @@
+.app {
+}
+
+
+.main {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.side-bar {
+  max-width: 100px;
+  position: absolute;
+  left: 0%;
+}
+
+.side-bar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info {
+  text-align: center;
+  margin-left: 10vw;
+}
+
 .infobox {
   text-align: center;
+}
+
+.games ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.games ul li {
+  padding: 0;
+  margin: 5px;
 }
